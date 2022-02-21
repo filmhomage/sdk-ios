@@ -19,30 +19,30 @@ def fix_unicode(data):
     return data
 
 if len(sys.argv) < 2 :
-	print "Applanga Automatic Settings File Update: Specify project directory."
+	print ("Applanga Automatic Settings File Update: Specify project directory.")
 	sys.exit(1)
 
 
 projectPath = sys.argv[1];
 #this file has to be in your project root dir
-print "-> searching for applanga settingfiles in " + projectPath
+print ("-> searching for applanga settingfiles in " + projectPath)
 for root, dirs, files in os.walk(projectPath):
 	for file in files:
 		if file.endswith(".applanga"):
 			try:
 				path = os.path.join(root,file)
-				print "--> found: '%s' in '%s'" % (file, path[len(os.getcwd())+1: len(path)])
+				print ("--> found: '%s' in '%s'" % (file, path[len(os.getcwd())+1: len(path)]))
 				tar = tarfile.open(path)
 				alData = json.load(tar.extractfile(tar.getmember("app.applanga")))
 				appId = alData["_id"];
 				apiSecret = alData["apiSecret"]
 				lastVersion = alData["__v"]
 				if not "groupIds" in  alData.keys():
-					print "Error: Your settingsfile is to old please update manually once before using the auto update script."
+					print ("Error: Your settingsfile is to old please update manually once before using the auto update script.")
 					continue
 				groupIds = alData["groupIds"]
 			except (Exception):
-				print "Settingsfile parsing error"
+				print ("Settingsfile parsing error")
 			else:	
 				try:
 					url = "%sv1/projects/%s/updateSettings?apiSecret=%s&lastVersion=%s&%s" % (baseUrl, appId, apiSecret, lastVersion, urllib.urlencode({'groupIds[]': fix_unicode(groupIds)}, True))
@@ -52,9 +52,9 @@ for root, dirs, files in os.walk(projectPath):
 						if not os.path.isfile(path):
 							newSettingsFile = urllib.URLopener()
 							newSettingsFile.retrieve(responseJson["settings"], path)
-							print "---> Settingsfile updated!"
+							print ("---> Settingsfile updated!")
 					else:
-						print "---> Settingsfile up-to-date"	
+						print ("---> Settingsfile up-to-date")
 					tar.close()
 				except (Exception):
-					print "Settingsfile update error:", sys.exc_info()
+					print ("Settingsfile update error:", sys.exc_info())
