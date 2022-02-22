@@ -36,4 +36,4 @@ if [ ! -f "${APPLANGA_DOWNLOAD_SCRIPTPATH}" ]; then
      curl -o "${APPLANGA_DOWNLOAD_SCRIPTPATH}" "https://raw.githubusercontent.com/applanga/sdk-ios/${APPLANGA_FRAMEWORK_BUNDLEID}/settingsfile_update.py"
 fi
 
-python "${APPLANGA_DOWNLOAD_SCRIPTPATH}" "$1"
+python2 "${APPLANGA_DOWNLOAD_SCRIPTPATH}" "$1"
